@@ -43,7 +43,6 @@ export const states = [
     'Ohio',
     'Oklahoma',
     'Oregon',
-    'Palau',
     'Pennsylvania',
     'Puerto Rico',
     'Rhode Island',

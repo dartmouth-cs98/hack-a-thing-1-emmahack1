@@ -1,7 +1,6 @@
 import React, {useState} from 'react';
 import Button from 'react-bootstrap/Button';
 import Select from 'react-select';
-import DataDisplay from './display-data';
 
 import {locationFileName, states} from '../constants';
 let fs = window.require('fs');
@@ -9,7 +8,7 @@ const request  = require('request');
 const csvtojson = require('csvtojson');
 
 export const AddLocations = (props) => {
-    const [locations, setLocations] = useState('');
+    const [locations, setLocations] = useState([]);
     const [addLocation, setAddLocation] = useState('');
     const [buttonText, setButtonText] = useState('Refresh data');
     // This is the link for the live covid19 data for all of the states
@@ -32,11 +31,9 @@ export const AddLocations = (props) => {
 
     // Format the data to display appropriately
     const formatData = (newData) => {
-        console.log(newData);
         let newList = []
         if (newData.length === 0) return '';
         fs.truncate(locationFileName, 0, function(){ 
-            console.log("after");
             locations.forEach((location) => {
                 let loc = newData.filter(e =>  e.state === location.name);
                 if (loc.length === 1) loc = loc[0];
@@ -47,7 +44,6 @@ export const AddLocations = (props) => {
                 })
                 fs.appendFileSync(locationFileName, location.name + ',' + loc.cases + ',' + loc.deaths + '\n');
             });
-            console.log(newList)
             setLocations(newList);
         });
     };
@@ -80,6 +76,22 @@ export const AddLocations = (props) => {
             });
         }
     }
+
+    const deleteLocationFromFile = (idx) => {
+        console.log(idx);
+        console.log(locations);
+        let newData = locations;
+        newData.splice(idx, 1);
+        console.log(locations);
+        fs.truncate(locationFileName, 0, function(){ 
+            if(newData.length === 0) return;
+            newData.forEach((location) => {
+                fs.appendFileSync(locationFileName, location.name + ',' + location.cases + ',' + location.deaths + '\n');
+            });
+            loadLocationsFromFile();
+
+        });
+    }
     
     // The states list need to be properly formatted for the react-select dropdown
     const statesFormat = [];
@@ -87,12 +99,12 @@ export const AddLocations = (props) => {
         statesFormat.push({value: state, label: state});
     });
 
-    if (locations === ''){
+    if (locations.length === 0){
         loadLocationsFromFile();
     } 
 
     return(
-        <div>
+        <div style ={{margin: '2vw'}}>
             <Select options = {statesFormat} onChange = {(newValue) => setAddLocation(newValue.value)}/>
             <br/>
             <Button onClick = {() => {addNewLocationToFile(addLocation);}}>
@@ -106,7 +118,22 @@ export const AddLocations = (props) => {
             }}>
                 {buttonText}
             </Button>
-            <DataDisplay locations={locations} />     
+            <br/>  
+            <br/>
+            {locations.map((location, idx) => {
+                return(
+                    <div key = {location.name}>
+                        <h3>{location.name}</h3>
+                        <p>Cases: {location.cases === " " ? "please refresh" : location.cases}</p>
+                        <p>Deaths: {location.deaths === " " ? "please refresh" : location.deaths}</p>
+                        <Button variant = "danger" onClick = {() => {deleteLocationFromFile(idx)}}>
+                            Delete Location
+                        </Button>
+                        <br/>  
+                        <br/>
+                    </div>
+                );
+            })}        
         </div>
     );
 
