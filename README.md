@@ -1,6 +1,8 @@
 # Hackathing 1
 This is a Desktop app built with [Electron](https://www.electronjs.org/) and [React](https://reactjs.org/) that tells the user what the current COVID19 counts are for particular ___ states? counties?
 
+Because this is just meant to be a desktop app, I disabled the automatic browser opening on `npm start`. To reenable, change the `start` script in `package.json` to `"start": "react-script start"`.
+
 ## Data 
 The data for this app comes from the New York Times opensource covid-19 project. This can be found [here](https://github.com/nytimes/covid-19-data).
 
