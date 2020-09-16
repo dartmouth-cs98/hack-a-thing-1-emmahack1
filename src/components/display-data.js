@@ -1,8 +1,11 @@
 import React,{useState} from "react";
 import Button from 'react-bootstrap/Button';
+import { locationFileName } from "../constants";
 
-const request  = require('request')
-const csvtojson = require('csvtojson')
+const request  = require('request');
+const csvtojson = require('csvtojson');
+let fs = window.require('fs');
+
 const DataDisplay = (props) => {   
     // We love react hooks
     const [buttonText, setButtonText] = useState('Refresh data');
@@ -31,30 +34,38 @@ const DataDisplay = (props) => {
     const formatData = (newData) => {
         let newList = []
         if (newData.length === 0) return '';
-        props.locations.forEach((location) => {
-            let loc = newData.filter(e =>  e.state === location.name);
-            if (loc.length === 1) loc = loc[0];
-            newList.push({
-                name: location.name,
-                cases: loc.cases,
-                deaths: loc.deaths
-            })
+        fs.truncate(locationFileName, 0, function(){ 
+            console.log(props.locations);
+            props.locations.forEach((location) => {
+                let loc = newData.filter(e =>  e.state === location.name);
+                if (loc.length === 1) loc = loc[0];
+                newList.push({
+                    name: location.name,
+                    cases: loc.cases,
+                    deaths: loc.deaths
+                })
+                fs.appendFileSync(locationFileName, location.name + ',' + loc.cases + ',' + loc.deaths + '\n');
+            });
+        setList(newList);
 
         });
-        setList(newList);
+        
     };
 
     return(
         <div>
-            <Button onClick = {() => {setButtonText('fetching'); getCountyData()}}>
+            <Button onClick = {() => {
+                setButtonText('fetching'); 
+                getCountyData();
+            }}>
                 {buttonText}
             </Button>
             {list.map((location) => {
                 return(
                     <div key = {location.name}>
                         <h2>{location.name}</h2>
-                        <p>Cases: {location.cases}</p>
-                        <p>Deaths: {location.deaths}</p>
+                        <p>Cases: {location.cases === " " ? "please refresh" : location.cases}</p>
+                        <p>Deaths: {location.deaths === " " ? "please refresh" : location.deaths}</p>
                     </div>
                 );
             })}

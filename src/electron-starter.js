@@ -7,8 +7,11 @@ function createWindow () {
     // Create the browser window.
     mainWindow = new BrowserWindow({
     width: 1024,
-    height: 728
-    });
+    height: 728,
+    webPreferences: {
+      nodeIntegration: true
+    }    
+});
     const startUrl = process.env.ELECTRON_START_URL || url.format({
         pathname: path.join(__dirname, '/index.html'),
         protocol: 'file:',
@@ -17,17 +20,17 @@ function createWindow () {
     mainWindow.loadURL(startUrl);
 
 }
+let tray = null;
 app.whenReady().then(() => {
     createWindow()
-    let tray = null
-    tray = new Tray('./assets/covinIcon.png')
+    tray = new Tray( path.join(__dirname, '/assets/tinyIcon.png'))
     const contextMenu = Menu.buildFromTemplate([
       { label: 'Item1', type: 'radio' },
       { label: 'Item2', type: 'radio' },
       { label: 'Item3', type: 'radio', checked: true },
       { label: 'Item4', type: 'radio' }
     ])
-    tray.setToolTip('This is my application.')
+    tray.setToolTip('Covid 19 is still happening')
     tray.setContextMenu(contextMenu)
     
     app.on('activate', function () {
