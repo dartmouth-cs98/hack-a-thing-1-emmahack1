@@ -3,7 +3,6 @@ export const locationFileName = "hack-a-thing-locations";
 export const states = [
     'Alabama',
     'Alaska',
-    'American Samoa',
     'Arizona',
     'Arkansas',
     'California',
