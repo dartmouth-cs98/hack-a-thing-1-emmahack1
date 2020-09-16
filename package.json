@@ -6,15 +6,20 @@
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.3.2",
     "@testing-library/user-event": "^7.1.2",
+    "bootstrap": "^4.5.2",
+    "csvtojson": "^2.0.10",
     "react": "^16.13.1",
+    "react-bootstrap": "^1.3.0",
     "react-dom": "^16.13.1",
     "react-scripts": "3.4.3"
   },
+  "main": "./src/electron-starter.js",
+  "homepage": "./",
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "start": "nf start -p 3000",
+    "electron": "electron .",
+    "electron-start": "node ./src/electron-wait-react",
+    "react-start": "BROWSER=none react-scripts start"
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -30,5 +35,14 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "electron": "^6.0.9",
+    "electron-builder": "^21.2.0",
+    "foreman": "^3.0.1"
+  },
+  "directories": {
+    "buildResources": "assets",
+    "output": "release"
   }
 }
