@@ -1,7 +1,6 @@
 // adapted from https://www.freecodecamp.org/news/building-an-electron-application-with-create-react-app-97945861647c/
 const { app, BrowserWindow, Menu, Tray, ipcMain} = require('electron');
 const fs = require('fs');
-const { resolve } = require('path');
 const path = require('path');
 const url = require('url');
 
@@ -24,7 +23,7 @@ function createWindow () {
 
 }
 let tray = null;
-const setUpTray = () => {
+const getDataForTray = () => {
   return new Promise((resolve, reject) => {
     const menu = [];
     if(fs.existsSync('./hack-a-thing-locations')) {
@@ -46,30 +45,25 @@ const setUpTray = () => {
     resolve(menu);
   });
 }
+const setUpTray = (tray) => {
+  getDataForTray().then((returnMenu) => {
+    let menu = returnMenu;
+    menu.push({label: 'Hide Window', click() { mainWindow.hide(); }});
+    menu.push({label: 'Show Window', click() { mainWindow.show(); }});
+    menu.push({label: 'Quit', click() { app.quit(); }});
+    const contextMenu = Menu.buildFromTemplate(menu);
+    tray.setToolTip('Covid 19 is still happening')
+    tray.setContextMenu(contextMenu)
+  });
+}
 
 app.whenReady().then(() => {
     createWindow()
     tray = new Tray(path.join(__dirname, '/assets/tinyIcon.png'))
-    setUpTray().then((returnMenu) => {
-      let menu = returnMenu;
-      menu.push({label: 'Hide Window', click() { mainWindow.hide(); }});
-      menu.push({label: 'Show Window', click() { mainWindow.show(); }});
-      menu.push({label: 'Quit', click() { app.quit(); }});
-      const contextMenu = Menu.buildFromTemplate(menu);
-      tray.setToolTip('Covid 19 is still happening')
-      tray.setContextMenu(contextMenu)
-    });
+    setUpTray(tray);
+
     ipcMain.on('UPDATED', (event, data) => {
-      console.log("updated");
-      setUpTray().then((returnMenu) => {
-        let menu = returnMenu;
-        menu.push({label: 'Hide Window', click() { mainWindow.hide(); app.dock.hide(); }});
-        menu.push({label: 'Show Window', click() { mainWindow.show(); app.dock.show();}});
-        menu.push({label: 'Quit', click() { app.quit(); }});
-        const contextMenu = Menu.buildFromTemplate(menu);
-        tray.setToolTip('Covid 19 is still happening')
-        tray.setContextMenu(contextMenu)
-      })  
+      setUpTray(tray);
     });
     
     app.on('activate', function () {
