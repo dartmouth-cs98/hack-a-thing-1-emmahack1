@@ -17,7 +17,7 @@
 .env.development.local
 .env.test.local
 .env.production.local
-hack-a-thing-locations
+./hack-a-thing-locations
 
 npm-debug.log*
 yarn-debug.log*
