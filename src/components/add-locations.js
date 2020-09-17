@@ -121,24 +121,7 @@ export const AddLocations = (props) => {
 
     return(
         <div style ={{padding: '2vw'}}>
-            <div style = {{color: 'black'}}>
-                <Select options = {statesFormat} onChange = {(newValue) => setAddLocation(newValue.value)}/>
-
-            </div>
-            <br/>
-            <Button onClick = {() => {addNewLocationToFile(addLocation);}}>
-                Add Location
-            </Button> 
-            <br/>  
-            <br/>
-            <Button onClick = {() => {
-                setButtonText('fetching'); 
-                getStateData();
-            }}>
-                {buttonText}
-            </Button>
-            <br/>  
-            <br/>
+            <h2 style = {{textAlign: 'center'}}> Covid Counts</h2>
             {locations.map((location, idx) => {
                 return(
                     <div key = {location.name}>
@@ -152,7 +135,27 @@ export const AddLocations = (props) => {
                         <br/>
                     </div>
                 );
-            })}        
+            })}     
+            <br/>
+            <br/>
+            <h3 style = {{textAlign: 'center'}}>Add a Location:</h3>
+
+            <div style = {{color: 'black'}}>
+                <Select options = {statesFormat} onChange = {(newValue) => setAddLocation(newValue.value)}/>
+
+            </div>
+            <br/>
+            <Button onClick = {() => {addNewLocationToFile(addLocation);}}>
+                Add
+            </Button> 
+            <br/>  
+            <br/>
+            <Button onClick = {() => {
+                setButtonText('fetching'); 
+                getStateData();
+            }}>
+                {buttonText}
+            </Button>   
         </div>
     );
 
