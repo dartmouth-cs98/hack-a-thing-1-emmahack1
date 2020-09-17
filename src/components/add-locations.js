@@ -6,14 +6,23 @@ import {locationFileName, states} from '../constants';
 let fs = window.require('fs');
 const request  = require('request');
 const csvtojson = require('csvtojson');
+const { ipcRenderer } = window.require('electron');
+
 
 export const AddLocations = (props) => {
+    const [data, setData] = useState('EMPTY');
     const [locations, setLocations] = useState([]);
     const [addLocation, setAddLocation] = useState('');
     const [buttonText, setButtonText] = useState('Refresh data');
     // This is the link for the live covid19 data for all of the states
     const COUNTIES_URL = 'https://raw.githubusercontent.com/nytimes/covid-19-data/master/live/us-states.csv';
 
+    // Tells the tray to update
+    const sendUpdate = () => {
+        console.log("sent update");
+
+        ipcRenderer.send('UPDATED', '');
+    }
     // Fetch the data. Since this app is so small, I don't think I need redux here.
     const getCountyData = () => {
         let newData = [];
@@ -44,6 +53,7 @@ export const AddLocations = (props) => {
                 })
                 fs.appendFileSync(locationFileName, location.name + ',' + loc.cases + ',' + loc.deaths + '\n');
             });
+            sendUpdate();
             setLocations(newList);
         });
     };
@@ -52,14 +62,15 @@ export const AddLocations = (props) => {
         // Adapted from https://www.tutorialspoint.com/electron/electron_file_handling.htm
         if(fs.existsSync(locationFileName)) {
             const locations = [];
-            let data = fs.readFileSync(locationFileName, 'utf8').split('\n')
+            let data = fs.readFileSync(locationFileName, 'utf8').split('\n');
             data.forEach((location) => {
                 if (location !== '') {
                     let [name, cases, deaths] = location.split(',')
                     locations.push({name, cases, deaths})
                 }
-            })
-            setLocations(locations)            
+            });
+            if (data[0] === '') setData(data);
+            else setLocations(locations);
         } else {
             console.log("File Doesn't Exist. Creating new file.")
             fs.writeFile(locationFileName, '', (err) => {
@@ -74,20 +85,19 @@ export const AddLocations = (props) => {
                 setAddLocation('');
                 loadLocationsFromFile();
             });
+            sendUpdate();
         }
     }
 
     const deleteLocationFromFile = (idx) => {
-        console.log(idx);
-        console.log(locations);
         let newData = locations;
         newData.splice(idx, 1);
-        console.log(locations);
         fs.truncate(locationFileName, 0, function(){ 
             if(newData.length === 0) return;
             newData.forEach((location) => {
                 fs.appendFileSync(locationFileName, location.name + ',' + location.cases + ',' + location.deaths + '\n');
             });
+            sendUpdate();
             loadLocationsFromFile();
 
         });
@@ -99,7 +109,7 @@ export const AddLocations = (props) => {
         statesFormat.push({value: state, label: state});
     });
 
-    if (locations.length === 0){
+    if (locations.length === 0 && data === 'EMPTY'){
         loadLocationsFromFile();
     } 
 
