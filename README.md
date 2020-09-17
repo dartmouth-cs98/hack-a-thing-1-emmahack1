@@ -3,16 +3,38 @@ This is a Desktop app built with [Electron](https://www.electronjs.org/) and [Re
 There is also a tray icon which allows you to hide the larger window and still obtain the information about the states that you have selected.
 ![screenshot](./src/assets/screenshot.png)
 
+I originally was interested in building a desktop app because I have never done that before. Although I am very familiar with javascript stacks, I thought that electron would be worth taking the time to explore.
+
+After implementing a basic version of this app with plain Electron, I was quickly reminded of why I use react for webdev, normal HTML/CSS/JQuery is really rudimentary and can be very limiting. So I followed some tutorials of how to integrate React with Electron, which made my final product look a lot nicer.  However many of these tutorials contradicted each other, so it took a while to get React to integrate with Electron.
+
+However, I believe that using React with Electron made it much harder to package this app, I was running into a lot of bugs trying to do that and did not end up solving this issue. 
+
+I also ran into issues with permissions in prod. In dev I can write and create files, but this process becomes much harder with a packaged app.
+
+This project showed me the power and limitations of desktop apps. It can be harder to get the different components to talk to each other, but in the end the `ipcRenderer` feature was really helpful for this communication.
+
 Because this is just meant to be a desktop app, I disabled the automatic browser opening on `npm start`. To reenable, change the `start` script in `package.json` to `"start": "react-script start"`.
 
+## Features
+This project includes:
+- Main Desktop Window
+    - Add locations
+    - Remove locations
+    - Refresh data
+- Tray
+    - Displays all of your current locations and data
+    - Allows you to show and hide the big window
+    - Allows you to quit the app
+    - Auto refreshes anytime someone adds a location, deletes a location, refreshes the data
 ## Data 
 The data for this app comes from the New York Times opensource covid-19 project. This can be found [here](https://github.com/nytimes/covid-19-data).
+
+I chose to only use the states data rather than the county data so that I could focus on playing with Electron's features rather than fussing with all all the counties.
 
 ## Setup
 - clone this repo
 - run `npm install`
 - run `npm start`
-Even though this technically
 
 ## Acknowledgements
 This project was setup using:
