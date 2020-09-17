@@ -1,7 +1,6 @@
 import React, {useState} from 'react';
 import Button from 'react-bootstrap/Button';
 import Select from 'react-select';
-
 import {locationFileName, states} from '../constants';
 let fs = window.require('fs');
 const request  = require('request');
@@ -121,8 +120,11 @@ export const AddLocations = (props) => {
     } 
 
     return(
-        <div style ={{margin: '2vw'}}>
-            <Select options = {statesFormat} onChange = {(newValue) => setAddLocation(newValue.value)}/>
+        <div style ={{padding: '2vw'}}>
+            <div style = {{color: 'black'}}>
+                <Select options = {statesFormat} onChange = {(newValue) => setAddLocation(newValue.value)}/>
+
+            </div>
             <br/>
             <Button onClick = {() => {addNewLocationToFile(addLocation);}}>
                 Add Location

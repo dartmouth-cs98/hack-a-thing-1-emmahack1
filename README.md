@@ -1,5 +1,7 @@
 # Hackathing 1
-This is a Desktop app built with [Electron](https://www.electronjs.org/) and [React](https://reactjs.org/) that tells the user what the current COVID19 counts are for particular ___ states? counties?
+This is a Desktop app built with [Electron](https://www.electronjs.org/) and [React](https://reactjs.org/) that tells the user what the current COVID19 counts are for particular states.
+There is also a tray icon which allows you to hide the larger window and still obtain the information about the states that you have selected.
+![screenshot](./src/assets/screenshot.png)
 
 Because this is just meant to be a desktop app, I disabled the automatic browser opening on `npm start`. To reenable, change the `start` script in `package.json` to `"start": "react-script start"`.
 

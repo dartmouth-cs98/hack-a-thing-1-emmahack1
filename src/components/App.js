@@ -1,10 +1,9 @@
 import React from 'react';
 import {AddLocations} from './add-locations';
-import 'bootstrap/dist/css/bootstrap.min.css';
 
 function App() {
   return (
-    <div className="App">
+    <div style = {{backgroundColor: '#282c34', color: 'white', height: '100vh'}}>
       <AddLocations/>
     </div>
   );
