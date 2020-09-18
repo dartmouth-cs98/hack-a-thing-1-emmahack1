@@ -16,11 +16,17 @@ export const AddLocations = (props) => {
     // This is the link for the live covid19 data for all of the states
     const STATE_URL = 'https://raw.githubusercontent.com/nytimes/covid-19-data/master/live/us-states.csv';
 
-    // Tells the tray to update
+    /**
+     *  This tells the electron part of the app that something happened
+     *  In this case it sends an "updated" message which will update the tray
+     */
     const sendUpdate = () => {
         ipcRenderer.send('UPDATED', '');
     }
-    // Fetch the data. Since this app is so small, I don't think I need redux here.
+
+    /**
+     * Fetches the state data and saves to the local state.
+     */
     const getStateData = () => {
         let newData = [];
         csvtojson()
@@ -36,7 +42,10 @@ export const AddLocations = (props) => {
             });
     };
 
-    // Format the data to display appropriately
+    /**
+     * Formats the data retrieved from the NYT's database to display properly
+     * @param {json} newData 
+     */
     const formatData = (newData) => {
         let newList = []
         if (newData.length === 0) return [];
@@ -58,6 +67,9 @@ export const AddLocations = (props) => {
         });
     };
 
+    /**
+     * Retrieves the data stored in the file from previous uses of the app
+     */
     const loadLocationsFromFile = () => {
         // Adapted from https://www.tutorialspoint.com/electron/electron_file_handling.htm
         if(fs.existsSync(locationFileName)) {
@@ -79,6 +91,10 @@ export const AddLocations = (props) => {
         }
     }
     
+    /**
+     * Writes new locations to the file to be saved on reload and to update the tray
+     * @param {string} addLocation 
+     */
     const addNewLocationToFile = (addLocation) => {
         if (addLocation !=='') {
             let stringToAdd = `${addLocation}, , \n`;
@@ -94,6 +110,10 @@ export const AddLocations = (props) => {
         }
     }
 
+    /**
+     * Removes location from list and rewrites the file
+     * @param {int} idx 
+     */
     const deleteLocationFromFile = (idx) => {
         let newData = locations;
         newData.splice(idx, 1);
@@ -113,6 +133,7 @@ export const AddLocations = (props) => {
         statesFormat.push({value: state, label: state});
     });
 
+    // First load
     if (locations.length === 0 && data === 'EMPTY'){
         // The data === "EMPTY" is to solve an infinite rerender crash when the file empty
         getStateData();

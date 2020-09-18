@@ -23,7 +23,12 @@ function createWindow () {
     mainWindow.loadURL(startUrl);
 
 }
+// The tray is the little icon at the top right of macs
 let tray = null;
+
+/**
+ * This adds all of the locations stored in the file to the tray
+ */
 const getDataForTray = () => {
   return new Promise((resolve, reject) => {
     const menu = [];
@@ -33,7 +38,7 @@ const getDataForTray = () => {
       data.forEach((location) => {
         if (location !== '') {
           let [name, cases, deaths] = location.split(',');
-              menu.splice(0,0,{label:`${name}: ${cases} cases, ${deaths} deaths`});
+              menu.push({label:`${name}: ${cases} cases, ${deaths} deaths`});
           }
       })
       resolve(menu);
@@ -46,6 +51,9 @@ const getDataForTray = () => {
     resolve(menu);
   });
 }
+/**
+ * After all of the locations are added to the tray, add the hide window, show window, and quit buttons
+ */
 const setUpTray = (tray) => {
   getDataForTray().then((returnMenu) => {
     let menu = returnMenu;
@@ -63,6 +71,7 @@ app.whenReady().then(() => {
     tray = new Tray(path.join(__dirname, '/assets/tinyIcon.png'))
     setUpTray(tray);
 
+    // When the react app tells electron that the data in the file has been updated, reset the tray
     ipcMain.on('UPDATED', (event, data) => {
       setUpTray(tray);
     });
