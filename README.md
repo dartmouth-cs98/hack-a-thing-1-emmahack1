@@ -13,6 +13,9 @@ I also ran into issues with permissions in prod. In dev I can write and create f
 
 This project showed me the power and limitations of desktop apps. It can be harder to get the different components to talk to each other, but in the end the `ipcRenderer` feature was really helpful for this communication.
 
+In the end I found that most things that you could want from a desktop app, you could do in a webapp (obviously excluding projects that would edit local files). While this was a fun experiement, I probably won't pursue this any further in this class.
+
+Note:
 Because this is just meant to be a desktop app, I disabled the automatic browser opening on `npm start`. To reenable, change the `start` script in `package.json` to `"start": "react-script start"`.
 
 ## Features
@@ -26,6 +29,8 @@ This project includes:
     - Allows you to show and hide the big window
     - Allows you to quit the app
     - Auto refreshes anytime someone adds a location, deletes a location, refreshes the data
+- Scheduler
+    - daily scheduled updates for the data
 ## Data 
 The data for this app comes from the New York Times opensource covid-19 project. This can be found [here](https://github.com/nytimes/covid-19-data).
 

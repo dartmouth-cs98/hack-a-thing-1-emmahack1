@@ -6,6 +6,8 @@ let fs = window.require('fs');
 const request  = require('request');
 const csvtojson = require('csvtojson');
 const { ipcRenderer } = window.require('electron');
+var schedule = require('node-schedule');
+
 
 
 export const AddLocations = (props) => {
@@ -23,7 +25,10 @@ export const AddLocations = (props) => {
     const sendUpdate = () => {
         ipcRenderer.send('UPDATED', '');
     }
-
+    var j = schedule.scheduleJob('0 1 * * *', function(){
+        getStateData();
+        console.log("scheduled data update")
+      });
     /**
      * Fetches the state data and saves to the local state.
      */
