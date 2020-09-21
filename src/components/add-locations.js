@@ -25,7 +25,12 @@ export const AddLocations = (props) => {
     const sendUpdate = () => {
         ipcRenderer.send('UPDATED', '');
     }
-    var j = schedule.scheduleJob('0 1 * * *', function(){
+
+    /**
+     * Scheduled daily call to fetch the most up to date covid data
+     */
+
+    schedule.scheduleJob('0 0 1 * * *', function(){
         getStateData();
         console.log("scheduled data update")
       });
